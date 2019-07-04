@@ -5,11 +5,11 @@ public class BasicGameApp {
 	public static void main(final String[] args) {
 
 		final Game game = Game.of(Deck.poker52Cards(),
-										Player.of("Fabien", 500),
-										Player.of("Christophe", 500),
-										Player.of("Joel", 500),
-										Player.of("Yuan", 500),
-										Player.of("Marc", 500));
+										Player.of("Fabien"),
+										Player.of("Christophe"),
+										Player.of("Joel"),
+										Player.of("Yuan"),
+										Player.of("Marc"));
 
 		game.turn();
 	}

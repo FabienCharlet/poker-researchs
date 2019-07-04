@@ -6,11 +6,15 @@ public class Card {
 
 		TWO(2),THREE(3),FOUR(4),FIVE(5),SIX(6),SEVEN(7),EIGHT(8),NINE(9),TEN(10),JACK(11),QUEEN(12),KING(13),ACE(14);
 
-		int intValue;
+		final int intValue;
 
 		private VALUE(final int intValue) {
 
 			this.intValue = intValue;
+		}
+
+		public int getIntValue() {
+			return intValue;
 		}
 	}
 
@@ -42,7 +46,7 @@ public class Card {
 
 			res = "A";
 
-		} else if (value.intValue <= 10) {
+		} else if (value.intValue <= 9) {
 
 			res = String.valueOf(value.intValue);
 

@@ -1,15 +1,32 @@
 package com.github.fabiencharlet.poker.researchs.domain;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import com.github.fabiencharlet.poker.researchs.domain.strategy.DefensiveGameStrategy;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 
 public class Game {
 
+	public enum PHASE {
+		
+		PRE_FLOP,
+		FLOP,
+		TURN,
+		RIVER,
+		SHOWDOWN
+	}
+	
+	
+	public static final int BLIND_AMOUNT = 10;
+	
 	private final Deck deck;
 	private final int dealer = 0;
+	private Map<Player, Integer> moneyByPlayer = new HashMap<>();
+	final Multimap<Player, Integer> betsByPlayer = HashMultimap.create();
 	private final List<Player> players;
 
 	public static Game of(final Deck deck, final Player... players) {
@@ -21,26 +38,71 @@ public class Game {
 
 		this.deck = deck;
 		this.players = players;
+		
+		for (Player player : players) {
+			
+			moneyByPlayer.put(player, 500);
+		}
 	}
 
 	public Game turn() {
+		
+		PHASE phase = PHASE.PRE_FLOP;
+		DefensiveGameStrategy strategy = new DefensiveGameStrategy();
 
 		final Deck turnDeck = deck.shuffle();
 		final Multimap<Player, Card> hands = HashMultimap.create();
 
-		for (int i = dealer+1; i <= dealer + (players.size() *  2); i++) {
+		int nbPlayers = players.size();
+		for (int i = dealer+1; i <= dealer + (nbPlayers *  2); i++) {
 
-			final int playerIndex = i % players.size();
-			hands.put(players.get(playerIndex), turnDeck.next());
+			hands.put(playerAt(i), turnDeck.next());
 		}
 
 		for (final Player player : players) {
 
 			System.out.println("Hand for " + player.name + " => " + hands.get(player));
 		}
+		
+		int smallBlind = dealer + 1;
+		int bigBlind = dealer + 2;
+		
+		bet(playerAt(smallBlind), BLIND_AMOUNT / 2);
+		bet(playerAt(bigBlind), BLIND_AMOUNT);
+		
+		for (int i = bigBlind+1; i < bigBlind+nbPlayers; i++) {
+		
+			Player player = playerAt(i);
+			//Choice choice = strategy.makeDecision(player, hands.get(player), i, betsByPlayer);
+		}
+
+		System.out.println("Bets : " + betsByPlayer);
 
 		return new Game(turnDeck, players);
 	}
 
+	private void bet(Player player, int amount) {
+		
+		if (amount + currentBet(player) <= moneyByPlayer.get(player)) {
+			
+			betsByPlayer.put(player, amount);
+		}
+	}
+	
+	private int currentBet(Player player) {
+		
+		int res = 0;
+		
+		for (Integer bet : betsByPlayer.get(player)) {
+			
+			res += bet;
+		}
+		
+		return res;
+	}
 
+	private Player playerAt(int index) {
+		
+		return players.get(index % players.size());
+	}
 }

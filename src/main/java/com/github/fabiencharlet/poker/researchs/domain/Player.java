@@ -3,16 +3,19 @@ package com.github.fabiencharlet.poker.researchs.domain;
 public class Player {
 
 	public final String name;
-	private final int money;
 
-	public static Player of(final String name, final int money) {
+	public static Player of(final String name) {
 
-		return new Player(name, money);
+		return new Player(name);
 	}
 
-	private Player(final String name, final int money) {
+	private Player(final String name) {
 
 		this.name = name;
-		this.money = money;
+	}
+	
+	@Override
+	public String toString() {
+		return name;
 	}
 }
