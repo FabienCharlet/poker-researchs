@@ -4,8 +4,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.github.fabiencharlet.poker.researchs.domain.Card.COLOR;
-import com.github.fabiencharlet.poker.researchs.domain.Card.VALUE;
+import com.github.fabiencharlet.poker.researchs.domain.cards.Card;
+import com.github.fabiencharlet.poker.researchs.domain.cards.Color;
+import com.github.fabiencharlet.poker.researchs.domain.cards.Value;
 import com.google.common.collect.ImmutableList;
 
 public class Deck {
@@ -14,9 +15,9 @@ public class Deck {
 
 		final List<Card> cards = new ArrayList<Card>();
 
-		for (final COLOR color : Card.COLOR.values()) {
+		for (final Color color : Color.values()) {
 
-			for (final VALUE value : Card.VALUE.values()) {
+			for (final Value value : Value.values()) {
 
 				cards.add(Card.of(value, color));
 			}

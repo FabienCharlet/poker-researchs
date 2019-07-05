@@ -3,63 +3,64 @@ package com.github.fabiencharlet.poker.researchs.domain;
 import java.util.Arrays;
 import java.util.List;
 
-import com.github.fabiencharlet.poker.researchs.domain.Card.COLOR;
-import com.github.fabiencharlet.poker.researchs.domain.Card.VALUE;
+import com.github.fabiencharlet.poker.researchs.domain.cards.Card;
+import com.github.fabiencharlet.poker.researchs.domain.cards.Color;
+import com.github.fabiencharlet.poker.researchs.domain.cards.Value;
 import com.github.fabiencharlet.poker.researchs.domain.strategy.HandEvaluator;
 
 public class PreFlopStatsTable {
 
-	public static void main(String[] args) {
-		
-		List<Card> spades = Arrays.asList(
-				Card.of(VALUE.ACE, COLOR.SPADE),
-				Card.of(VALUE.KING, COLOR.SPADE),
-				Card.of(VALUE.QUEEN, COLOR.SPADE),
-				Card.of(VALUE.JACK, COLOR.SPADE),
-				Card.of(VALUE.TEN, COLOR.SPADE),
-				Card.of(VALUE.NINE, COLOR.SPADE),
-				Card.of(VALUE.EIGHT, COLOR.SPADE),
-				Card.of(VALUE.SEVEN, COLOR.SPADE),
-				Card.of(VALUE.SIX, COLOR.SPADE),
-				Card.of(VALUE.FIVE, COLOR.SPADE),
-				Card.of(VALUE.FOUR, COLOR.SPADE),
-				Card.of(VALUE.THREE, COLOR.SPADE),
-				Card.of(VALUE.TWO, COLOR.SPADE)
+	public static void main(final String[] args) {
+
+		final List<Card> spades = Arrays.asList(
+				Card.of(Value.ACE, Color.SPADE),
+				Card.of(Value.KING, Color.SPADE),
+				Card.of(Value.QUEEN, Color.SPADE),
+				Card.of(Value.JACK, Color.SPADE),
+				Card.of(Value.TEN, Color.SPADE),
+				Card.of(Value.NINE, Color.SPADE),
+				Card.of(Value.EIGHT, Color.SPADE),
+				Card.of(Value.SEVEN, Color.SPADE),
+				Card.of(Value.SIX, Color.SPADE),
+				Card.of(Value.FIVE, Color.SPADE),
+				Card.of(Value.FOUR, Color.SPADE),
+				Card.of(Value.THREE, Color.SPADE),
+				Card.of(Value.TWO, Color.SPADE)
 			);
-		
-		
-		List<Card> hearts = Arrays.asList(
-				Card.of(VALUE.ACE, COLOR.HEART),
-				Card.of(VALUE.KING, COLOR.HEART),
-				Card.of(VALUE.QUEEN, COLOR.HEART),
-				Card.of(VALUE.JACK, COLOR.HEART),
-				Card.of(VALUE.TEN, COLOR.HEART),
-				Card.of(VALUE.NINE, COLOR.HEART),
-				Card.of(VALUE.EIGHT, COLOR.HEART),
-				Card.of(VALUE.SEVEN, COLOR.HEART),
-				Card.of(VALUE.SIX, COLOR.HEART),
-				Card.of(VALUE.FIVE, COLOR.HEART),
-				Card.of(VALUE.FOUR, COLOR.HEART),
-				Card.of(VALUE.THREE, COLOR.HEART),
-				Card.of(VALUE.TWO, COLOR.HEART)
+
+
+		final List<Card> hearts = Arrays.asList(
+				Card.of(Value.ACE, Color.HEART),
+				Card.of(Value.KING, Color.HEART),
+				Card.of(Value.QUEEN, Color.HEART),
+				Card.of(Value.JACK, Color.HEART),
+				Card.of(Value.TEN, Color.HEART),
+				Card.of(Value.NINE, Color.HEART),
+				Card.of(Value.EIGHT, Color.HEART),
+				Card.of(Value.SEVEN, Color.HEART),
+				Card.of(Value.SIX, Color.HEART),
+				Card.of(Value.FIVE, Color.HEART),
+				Card.of(Value.FOUR, Color.HEART),
+				Card.of(Value.THREE, Color.HEART),
+				Card.of(Value.TWO, Color.HEART)
 			);
-		
+
 		for (int i = 0; i < 13; i++) {
-			
+
 			for (int j = 0; j < 13; j++) {
-				
+
 				int proba = 0;
-				
+
 				if (j > i) {
-					
+
 					proba = HandEvaluator.preFlopChancesToWin(Arrays.asList(spades.get(i), spades.get(j)), 5);
-				} 
+				}
 				else {
-					
+
 
 					proba = HandEvaluator.preFlopChancesToWin(Arrays.asList(spades.get(i), hearts.get(j)), 5);
 				}
-				
+
 				if (proba < 10) {
 
 					System.out.print("0");

@@ -27,9 +27,15 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>org.checkerframework.annotatedlib</groupId>
+			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
-			<version>27.1-jre</version>
+			<version>28.0-jre</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.truth</groupId>
+			<artifactId>truth</artifactId>
+			<version>1.0-rc2</version>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 
