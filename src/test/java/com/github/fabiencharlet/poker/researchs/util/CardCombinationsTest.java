@@ -4,32 +4,32 @@ import java.util.Arrays;
 
 import org.junit.Test;
 
-import com.github.fabiencharlet.poker.researchs.domain.cards.Card;
+import com.github.fabiencharlet.poker.researchs.TestsBase;
 import com.github.fabiencharlet.poker.researchs.domain.cards.Result;
 import com.google.common.truth.Truth;
 
-public class CardCombinationsTest {
+public class CardCombinationsTest extends TestsBase {
 
 	@Test
 	public void noCombinationShallBeHighCard() {
 
 		Truth.assertThat(
-			Cards.findHighestCombination(
-				Arrays.asList(Card.two().ofSpade(),Card.five().ofHeart()),
-				Arrays.asList(Card.seven().ofDiamond(),Card.ten().ofClub(),Card.eight().ofDiamond(),Card.jack().ofSpade(),Card.four().ofClub())))
+			Combinations.findHighestCombination(
+				Arrays.asList(two().ofSpade(), five().ofHeart()),
+				Arrays.asList(seven().ofDiamond(), ten().ofClub(), eight().ofDiamond(), jack().ofSpade(),four().ofClub())))
 
-			 .isEqualTo(Result.highCard(Card.jack().ofSpade()));
+			 .isEqualTo(Result.highCard(jack().ofSpade()));
 	}
 
 	@Test
 	public void onePairShallBeFound() {
 
 		Truth.assertThat(
-			Cards.findHighestCombination(
-				Arrays.asList(Card.two().ofSpade(),Card.three().ofHeart()),
-				Arrays.asList(Card.seven().ofDiamond(),Card.ten().ofClub(),Card.eight().ofDiamond(),Card.three().ofSpade(),Card.four().ofClub())))
+			Combinations.findHighestCombination(
+				Arrays.asList(two().ofSpade(),three().ofHeart()),
+				Arrays.asList(seven().ofDiamond(),ten().ofClub(),eight().ofDiamond(),three().ofSpade(),four().ofClub())))
 
-		 	.isEqualTo(Result.onePair(Card.three().ofHeart(), Card.three().ofSpade()));
+		 	.isEqualTo(Result.onePair(three().ofHeart(), three().ofSpade()));
 
 	}
 
@@ -37,65 +37,109 @@ public class CardCombinationsTest {
 	public void twoPairsShallBeFound() {
 
 		Truth.assertThat(
-			Cards.findHighestCombination(
-				Arrays.asList(Card.ten().ofSpade(),Card.three().ofHeart()),
-				Arrays.asList(Card.seven().ofDiamond(),Card.ten().ofClub(),Card.eight().ofDiamond(),Card.three().ofSpade(),Card.four().ofClub())))
+			Combinations.findHighestCombination(
+				Arrays.asList(ten().ofSpade(),three().ofHeart()),
+				Arrays.asList(seven().ofDiamond(),ten().ofClub(),eight().ofDiamond(),three().ofSpade(),four().ofClub())))
 
-		.isEqualTo(Result.twoPairs(Card.ten().ofSpade(), Card.ten().ofClub(), Card.three().ofHeart(), Card.three().ofSpade()));
+		.isEqualTo(Result.twoPairs(ten().ofSpade(), ten().ofClub(), three().ofHeart(), three().ofSpade()));
 	}
 
 	@Test
 	public void threeOfAKindShallBeFound() {
 
 		Truth.assertThat(
-			Cards.findHighestCombination(
-				Arrays.asList(Card.two().ofSpade(),Card.three().ofHeart()),
-				Arrays.asList(Card.seven().ofDiamond(),Card.three().ofClub(),Card.eight().ofDiamond(),Card.three().ofSpade(),Card.four().ofClub())))
+			Combinations.findHighestCombination(
+				Arrays.asList(two().ofSpade(),three().ofHeart()),
+				Arrays.asList(seven().ofDiamond(),three().ofClub(),eight().ofDiamond(),three().ofSpade(),four().ofClub())))
 
-		 	.isEqualTo(Result.threeOfAKind(Card.three().ofHeart(), Card.three().ofClub(), Card.three().ofSpade()));
+		 	.isEqualTo(Result.threeOfAKind(three().ofHeart(), three().ofClub(), three().ofSpade()));
 	}
 
 	@Test
 	public void fourOfAKindShallBeFound() {
 
 		Truth.assertThat(
-			Cards.findHighestCombination(
-				Arrays.asList(Card.two().ofSpade(),Card.three().ofHeart()),
-				Arrays.asList(Card.three().ofDiamond(),Card.three().ofClub(),Card.eight().ofDiamond(),Card.three().ofSpade(),Card.four().ofClub())))
+			Combinations.findHighestCombination(
+				Arrays.asList(two().ofSpade(),three().ofHeart()),
+				Arrays.asList(three().ofDiamond(),three().ofClub(),eight().ofDiamond(),three().ofSpade(),four().ofClub())))
 
-		 	.isEqualTo(Result.fourOfAKind(Card.three().ofHeart(), Card.three().ofDiamond(),Card.three().ofClub(),Card.three().ofSpade()));
+		 	.isEqualTo(Result.fourOfAKind(three().ofHeart(), three().ofDiamond(),three().ofClub(),three().ofSpade()));
 	}
 
 	@Test
 	public void fullHouseShallBeFound() {
 
 		Truth.assertThat(
-			Cards.findHighestCombination(
-				Arrays.asList(Card.two().ofSpade(),Card.three().ofHeart()),
-				Arrays.asList(Card.two().ofDiamond(),Card.three().ofClub(),Card.eight().ofDiamond(),Card.three().ofSpade(),Card.two().ofClub())))
+			Combinations.findHighestCombination(
+				Arrays.asList(two().ofSpade(),three().ofHeart()),
+				Arrays.asList(two().ofDiamond(),three().ofClub(),eight().ofDiamond(),three().ofSpade(),two().ofClub())))
 
-		 	.isEqualTo(Result.fullHouse(Card.three().ofHeart(), Card.three().ofClub(), Card.three().ofSpade(),Card.two().ofSpade(),Card.two().ofDiamond()));
+		 	.isEqualTo(Result.fullHouse(three().ofHeart(), three().ofClub(), three().ofSpade(),two().ofSpade(),two().ofDiamond()));
 	}
 
 	@Test
-	public void flushShallBeHighCard() {
+	public void flushShallBeHighFound() {
 
 		Truth.assertThat(
-			Cards.findHighestCombination(
-				Arrays.asList(Card.two().ofSpade(),Card.five().ofSpade()),
-				Arrays.asList(Card.seven().ofSpade(),Card.ten().ofClub(),Card.eight().ofSpade(),Card.jack().ofSpade(),Card.four().ofClub())))
+			Combinations.findHighestCombination(
+				Arrays.asList(two().ofSpade(),five().ofSpade()),
+				Arrays.asList(seven().ofSpade(),ten().ofClub(),eight().ofSpade(),jack().ofSpade(),four().ofClub())))
 
-			 .isEqualTo(Result.flush(Card.two().ofSpade(),Card.five().ofSpade(),Card.seven().ofSpade(),Card.eight().ofSpade(),Card.jack().ofSpade()));
+			 .isEqualTo(Result.flush(two().ofSpade(),five().ofSpade(),seven().ofSpade(),eight().ofSpade(),jack().ofSpade()));
 	}
 
 	@Test
-	public void straightShallBeHighCard() {
+	public void straightShallBeFound() {
 
 		Truth.assertThat(
-			Cards.findHighestCombination(
-				Arrays.asList(Card.two().ofSpade(),Card.five().ofHeart()),
-				Arrays.asList(Card.seven().ofDiamond(),Card.three().ofClub(),Card.six().ofDiamond(),Card.jack().ofSpade(),Card.four().ofClub())))
+			Combinations.findHighestCombination(
+				Arrays.asList(two().ofSpade(),five().ofHeart()),
+				Arrays.asList(seven().ofDiamond(),three().ofClub(),six().ofDiamond(),jack().ofSpade(),four().ofClub())))
 
-			 .isEqualTo(Result.straight(Card.three().ofClub(),Card.four().ofClub(),Card.five().ofHeart(),Card.six().ofDiamond(),Card.seven().ofDiamond()));
+			 .isEqualTo(Result.straight(three().ofClub(),four().ofClub(),five().ofHeart(),six().ofDiamond(),seven().ofDiamond()));
+	}
+
+	@Test
+	public void straightAceToFiveShallBeFound() {
+
+		Truth.assertThat(
+			Combinations.findHighestCombination(
+				Arrays.asList(two().ofSpade(),five().ofHeart()),
+				Arrays.asList(ace().ofDiamond(),three().ofClub(),queen().ofDiamond(),jack().ofSpade(),four().ofClub())))
+
+			 .isEqualTo(Result.straight(ace().ofDiamond(),two().ofSpade(),three().ofClub(),four().ofClub(),five().ofHeart()));
+	}
+
+	@Test
+	public void straightWithThreeOfAKindShallBeStraight() {
+
+		Truth.assertThat(
+			Combinations.findHighestCombination(
+				Arrays.asList(three().ofSpade(),five().ofHeart()),
+				Arrays.asList(seven().ofDiamond(),three().ofClub(),six().ofDiamond(),three().ofHeart(),four().ofClub())))
+
+			 .isEqualTo(Result.straight(three().ofSpade(),four().ofClub(),five().ofHeart(),six().ofDiamond(),seven().ofDiamond()));
+	}
+
+	@Test
+	public void straightFlushShallBeFound() {
+
+		Truth.assertThat(
+			Combinations.findHighestCombination(
+				Arrays.asList(three().ofSpade(),five().ofClub()),
+				Arrays.asList(seven().ofClub(),three().ofClub(),six().ofClub(),five().ofSpade(),four().ofClub())))
+
+			 .isEqualTo(Result.straightFlush(three().ofClub(),four().ofClub(),five().ofClub(),six().ofClub(),seven().ofClub()));
+	}
+
+	@Test
+	public void royalFlushShallBeFound() {
+
+		Truth.assertThat(
+			Combinations.findHighestCombination(
+				Arrays.asList(ace().ofSpade(),queen().ofClub()),
+				Arrays.asList(ace().ofClub(),ten().ofClub(),king().ofClub(),queen().ofSpade(),jack().ofClub())))
+
+			 .isEqualTo(Result.royalFlush(ten().ofClub(),jack().ofClub(),queen().ofClub(),king().ofClub(),ace().ofClub()));
 	}
 }

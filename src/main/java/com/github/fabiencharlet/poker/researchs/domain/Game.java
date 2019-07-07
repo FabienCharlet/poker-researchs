@@ -5,12 +5,16 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
+import com.github.fabiencharlet.poker.researchs.domain.Choice.ACTION;
 import com.github.fabiencharlet.poker.researchs.domain.cards.Card;
+import com.github.fabiencharlet.poker.researchs.domain.cards.Deck;
 import com.github.fabiencharlet.poker.researchs.domain.strategy.DefensiveGameStrategy;
-import com.github.fabiencharlet.poker.researchs.util.Cards;
+import com.github.fabiencharlet.poker.researchs.util.WinnersFinder;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import com.google.common.collect.MultimapBuilder.ListMultimapBuilder;
 
 public class Game {
 
@@ -29,9 +33,10 @@ public class Game {
 	private final Deck deck;
 	private final int dealer = 0;
 	private final Map<Player, Integer> moneyByPlayer = new HashMap<>();
-	final Multimap<Player, Integer> betsByPlayer = HashMultimap.create();
+	final Multimap<Player, Integer> betsByPlayer = ListMultimapBuilder.hashKeys().arrayListValues().build();
 	private final List<Player> players;
 	private final List<Card> flop = new ArrayList<>();
+	ArrayList<Player> notFoldedPlayers;
 
 	public static Game of(final Deck deck, final Player... players) {
 
@@ -43,6 +48,8 @@ public class Game {
 		this.deck = deck;
 		this.players = players;
 
+		notFoldedPlayers = new ArrayList<>(players);
+
 		for (final Player player : players) {
 
 			moneyByPlayer.put(player, 500);
@@ -50,6 +57,7 @@ public class Game {
 	}
 
 	public Game turn() {
+
 
 		final PHASE phase = PHASE.PRE_FLOP;
 		final DefensiveGameStrategy strategy = new DefensiveGameStrategy();
@@ -66,21 +74,87 @@ public class Game {
 		bet(playerAt(smallBlind), BLIND_AMOUNT / 2);
 		bet(playerAt(bigBlind), BLIND_AMOUNT);
 
-		for (int i = bigBlind+1; i < bigBlind+nbPlayers; i++) {
+		for (int i = bigBlind+1; i <= bigBlind+nbPlayers; i++) {
 
+			int betPosition = i - 3;
 			final Player player = playerAt(i);
-			//Choice choice = strategy.makeDecision(player, hands.get(player), i, betsByPlayer);
+			Choice choice = strategy.makePreflopDecision(player, hands.get(player), betPosition, betsByPlayer);
+
+			applyChoice(player, choice);
 		}
+
+
 
 		System.out.println("Bets : " + betsByPlayer);
 
-		for (final Player player : players) {
-
-			System.out.println("Best combination " + Cards.findHighestCombination(new ArrayList<>(hands.get(player)), flop));
-		}
+		showDown(hands);
 
 		return new Game(turnDeck, players);
 	}
+
+	private void applyChoice(Player player,Choice choice) {
+
+		if (choice.action == ACTION.FOLD) {
+
+			notFoldedPlayers.remove(player);
+			return;
+		}
+
+		if (choice.action == ACTION.CHECK) {
+
+			return;
+		}
+
+		if (choice.action == ACTION.CALL || choice.action == ACTION.RAISE ) {
+
+			betsByPlayer.put(player, choice.amount);
+			return;
+		}
+	}
+
+	private void showDown(Multimap<Player, Card> hands) {
+
+		System.out.println("Flop : " + flop);
+
+		List<Player> winners = WinnersFinder.findWinners(notFoldedPlayers, hands, flop);
+
+		System.out.println("Winners => " + winners);
+
+		int sum = 0;
+
+		for (Entry<Player, Integer> betByPlayer : betsByPlayer.entries()) {
+
+			Player player = betByPlayer.getKey();
+
+			Integer currentMoney = moneyByPlayer.get(player);
+			Integer bet = betByPlayer.getValue();
+
+			moneyByPlayer.put(player, currentMoney - bet);
+			sum += bet;
+		}
+
+		System.out.println("Total Bets =>" + sum);
+
+		int rest = sum % winners.size();
+
+		for (Player player : winners) {
+
+			Integer currentMoney = moneyByPlayer.get(player);
+			currentMoney += (sum - rest) / winners.size();
+
+			if (rest > 0) {
+
+				currentMoney += 1;
+				rest--;
+			}
+
+			moneyByPlayer.put(player, currentMoney);
+		}
+
+		System.out.println("Current balances " + moneyByPlayer);
+	}
+
+
 
 	private void giveCards(final Deck turnDeck, final Multimap<Player, Card> hands, final int nbPlayers) {
 
@@ -104,8 +178,6 @@ public class Game {
 
 		turnDeck.next();
 		flop.add(turnDeck.next());
-
-		System.out.println("Flop : " + flop);
 
 	}
 

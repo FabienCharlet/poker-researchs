@@ -53,23 +53,9 @@ public class Card {
 	@Override
 	public String toString() {
 
-		String res;
-
-		if (value.intValue == 14) {
-
-			res = "A";
-
-		} else if (value.intValue <= 9) {
-
-			res = String.valueOf(value.intValue);
-
-		} else {
-
-			res = value.name().substring(0, 1);
-		}
-
-		return res + color.name().substring(0, 1).toLowerCase();
+		return value.toString() + color.name().substring(0, 1).toLowerCase();
 	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;

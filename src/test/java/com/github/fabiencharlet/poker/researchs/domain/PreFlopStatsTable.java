@@ -53,12 +53,12 @@ public class PreFlopStatsTable {
 
 				if (j > i) {
 
-					proba = HandEvaluator.preFlopChancesToWin(Arrays.asList(spades.get(i), spades.get(j)), 5);
+					proba = HandEvaluator.preFlopChancesToWin(Arrays.asList(spades.get(i), spades.get(j)));
 				}
 				else {
 
 
-					proba = HandEvaluator.preFlopChancesToWin(Arrays.asList(spades.get(i), hearts.get(j)), 5);
+					proba = HandEvaluator.preFlopChancesToWin(Arrays.asList(spades.get(i), hearts.get(j)));
 				}
 
 				if (proba < 10) {

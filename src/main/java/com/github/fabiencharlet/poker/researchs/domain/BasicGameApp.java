@@ -1,5 +1,7 @@
 package com.github.fabiencharlet.poker.researchs.domain;
 
+import com.github.fabiencharlet.poker.researchs.domain.cards.Deck;
+
 public class BasicGameApp {
 
 	public static void main(final String[] args) {

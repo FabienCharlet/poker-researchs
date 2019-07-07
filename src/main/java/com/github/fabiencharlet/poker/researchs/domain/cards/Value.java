@@ -25,4 +25,25 @@ public enum Value {
 	public int getIntValue() {
 		return intValue;
 	}
+	
+	@Override
+	public String toString() {
+
+		String res;
+
+		if (intValue == 14) {
+
+			res = "A";
+
+		} else if (intValue <= 9) {
+
+			res = String.valueOf(intValue);
+
+		} else {
+
+			res = name().substring(0, 1);
+		}
+
+		return res;
+	}
 }

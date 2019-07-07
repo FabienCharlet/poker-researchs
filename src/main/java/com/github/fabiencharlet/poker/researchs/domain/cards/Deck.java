@@ -1,12 +1,9 @@
-package com.github.fabiencharlet.poker.researchs.domain;
+package com.github.fabiencharlet.poker.researchs.domain.cards;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.github.fabiencharlet.poker.researchs.domain.cards.Card;
-import com.github.fabiencharlet.poker.researchs.domain.cards.Color;
-import com.github.fabiencharlet.poker.researchs.domain.cards.Value;
 import com.google.common.collect.ImmutableList;
 
 public class Deck {

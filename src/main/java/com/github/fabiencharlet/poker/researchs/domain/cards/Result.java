@@ -3,7 +3,7 @@ package com.github.fabiencharlet.poker.researchs.domain.cards;
 import java.util.Arrays;
 import java.util.List;
 
-import com.github.fabiencharlet.poker.researchs.util.Cards.Combination;
+import com.github.fabiencharlet.poker.researchs.util.Combinations.Combination;
 
 public class Result {
 
@@ -82,6 +82,16 @@ public class Result {
 	public static Result straight(final Card straightOne, final Card straightTwo, final Card straightThree, final Card straightFour, final Card straightFive) {
 
 		return Result.of(Combination.STRAIGHT, Arrays.asList(straightOne, straightTwo, straightThree, straightFour, straightFive));
+	}
+
+	public static Result straightFlush(final Card straightOne, final Card straightTwo, final Card straightThree, final Card straightFour, final Card straightFive) {
+
+		return Result.of(Combination.STRAIGHT_FLUSH, Arrays.asList(straightOne, straightTwo, straightThree, straightFour, straightFive));
+	}
+
+	public static Result royalFlush(final Card straightOne, final Card straightTwo, final Card straightThree, final Card straightFour, final Card straightFive) {
+
+		return Result.of(Combination.ROYAL_FLUSH, Arrays.asList(straightOne, straightTwo, straightThree, straightFour, straightFive));
 	}
 
 	public final Combination combination;

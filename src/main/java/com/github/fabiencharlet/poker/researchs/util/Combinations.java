@@ -14,10 +14,14 @@ import com.github.fabiencharlet.poker.researchs.domain.cards.Value;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Multimaps;
 
-public class Cards {
+public class Combinations {
+
+	private static List<String> STRAIGHT_PATTERNS =
+			Arrays.asList("A2345", "23456", "34567", "45678", "56789", "6789T", "789TJ", "89TJQ", "9TJQK", "TJQKA");
 
 	public enum Combination {
 
+		//!\ Don't change order, used for find best combination
 		HIGH_CARD,
 		ONE_PAIR,
 		TWO_PAIRS,
@@ -47,6 +51,7 @@ public class Cards {
 
 		return first.value == second.value;
 	}
+
 
 	public static Result findHighestCombination(final List<Card> hand, final List<Card> flop) {
 
@@ -149,6 +154,20 @@ public class Cards {
 
 			if (sameColorCards.size() >= 5) {
 
+				Optional<Result> straightsResult = findStraights(sameColorCards);
+
+				if (straightsResult.isPresent()) {
+
+					List<Card> straightFlushCards = straightsResult.get().cards;
+
+					if (straightFlushCards.get(4).value == Value.ACE) {
+
+						return Optional.of(Result.of(Combination.ROYAL_FLUSH, straightFlushCards));
+					}
+
+					return Optional.of(Result.of(Combination.STRAIGHT_FLUSH, straightFlushCards));
+				}
+
 				return Optional.of(Result.flush(
 						sameColorCards.get(0),
 						sameColorCards.get(1),
@@ -161,67 +180,53 @@ public class Cards {
 		return Optional.empty();
 	}
 
+
 	public static Optional<Result> findStraights(final List<Card> cards) {
 
-		final List<Card> cardsInOrder = cards.stream()
-			.sorted(Comparator.comparing(Card::getValue)).collect(Collectors.toList());
+		String valuesAsString = cards.stream()
+				.map(Card::getValue)
+				.distinct()
+				.sorted()
+				.map(Value::toString)
+				.collect(Collectors.joining(""));
 
-		int bestStart = -1;
+		String patternFound = null;
 
-		for (int i = 0; i < cardsInOrder.size()-4; i++) {
+		for (int i = 0; i < valuesAsString.length() - 4; i++) {
 
-			for (int j = i+4; j < cardsInOrder.size(); j++) {
+			String fiveCardPattern = valuesAsString.substring(i, i+5);
 
-				final Card firstCard = cardsInOrder.get(i);
+			if (STRAIGHT_PATTERNS.contains(fiveCardPattern)) {
 
-				Value currentValue = firstCard.value;
-				final Card lastCard = cardsInOrder.get(j);
+				patternFound = fiveCardPattern;
+			}
+		}
 
-				if (firstCard.getValue().ordinal() < Value.JACK.ordinal() && lastCard.getValue() == Value.values()[i+4]) {
+		if (patternFound == null && valuesAsString.endsWith("A")) {
 
-					for (int index = i+1; index < j+1; index++) {
+			valuesAsString = "A" + valuesAsString;
 
-						if (cardsInOrder.get(index).value != Value.values()[currentValue.ordinal()+1]) {
+			for (int i = 0; i < valuesAsString.length() - 4; i++) {
 
-							continue;
-						}
+				String fiveCardPattern = valuesAsString.substring(i, i+5);
 
-						currentValue = cardsInOrder.get(index).value;
-					}
+				if (STRAIGHT_PATTERNS.contains(fiveCardPattern)) {
 
-					if (currentValue.ordinal() == firstCard.value.ordinal()+4) {
-
-						bestStart = i;
-					}
+					patternFound = fiveCardPattern;
 				}
 			}
 		}
 
-		if (bestStart > -1) {
+		if (patternFound != null) {
 
-			Value current = cardsInOrder.get(bestStart).value;
-			final List<Card> straightCards = new ArrayList<Card>();
-			straightCards.add(cardsInOrder.get(bestStart));
+			List<Card> straightCards = new ArrayList<>();
 
-			for (int i = bestStart+1; i < cardsInOrder.size(); i++) {
+			for (int i = 0; i < 5; i++) {
 
-				final Card followingCard = cardsInOrder.get(i);
-				final Value followingCardValue = followingCard.value;
+				String valueLetter = "" + patternFound.charAt(i);
 
-				if (followingCardValue == current) {
-
-					continue;
-				}
-
-				current = followingCardValue;
-				straightCards.add(followingCard);
-
-				if (straightCards.size() == 5) {
-
-					break;
-				}
+				straightCards.add(cards.stream().filter(c -> c.value.toString().equals(valueLetter)).findFirst().get());
 			}
-
 
 			return Optional.of(Result.of(Combination.STRAIGHT, straightCards));
 		}
